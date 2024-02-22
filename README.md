@@ -1,5 +1,10 @@
 # Permit.io Go application example
 
+##  Prerequisites
+
+- [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.0
+- [Go](https://golang.org/doc/install) >= 1.19
+
 ### init
 
 From the application folder:
@@ -84,10 +89,5 @@ curl -X POST -d '{"user_name":"permit1","name":"My_New_Blog"}' http://localhost:
 ## Response example (according to the configured policy):
 'New blog created successfully' for success
 'Access denied' for unsuccess
-
-##  Prerequisites
-
-- [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.0
-- [Go](https://golang.org/doc/install) >= 1.19
 
 
