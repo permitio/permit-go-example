@@ -1,9 +1,5 @@
 # Permit.io Go application example
 
-## Usage 
-
-The [examples directory](./examples) contains a number of examples of how to use the provider.
-
 ### init
 
 From the application folder:
