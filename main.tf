@@ -28,13 +28,7 @@ resource "permitio_resource" "blog" {
       "description" = "delete a blog"
     }
   }
-#   attributes = {
-#     "title" = {
-#       "description" = "the title of the blog"
-#       "type"        = "string"
-#     }
-#   }
-    attributes = {}
+  attributes = {}
 }
 
 resource "permitio_role" "owner" {
