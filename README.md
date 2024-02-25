@@ -22,16 +22,16 @@ PDP is the component that will enforcement the policies and on every permit.chec
 In order to run it, please run the following Docker command:
 
 ```sh
-docker run -p 8081:7000 --env PDP_API_KEY=<API_KEY> --env PDP_DEBUG=true permitio/pdp-v2:latest
+docker run -p 7766:7000 --env PDP_API_KEY=<API_KEY> --env PDP_DEBUG=true permitio/pdp-v2:latest
 ```
-The PDP will run internally on port 7000 and will export port 8081 outside
+The PDP will run internally on port 7000 and will export port 7766 outside
 
 The PDP configure at the app will looks like the following:
 
 ```go
 permitConfig := config.NewConfigBuilder(
 		"<API_KEY>").
-		WithPdpUrl("http://localhost:8081").
+		WithPdpUrl("http://localhost:7766").
 		Build()
 ```
 In order to make sure that the PDP is up and running, please look at logs, for example:
@@ -62,6 +62,13 @@ terraform init
 terraform plan
 terraform apply
 ```
+Example screenshots of the expected state after terraform apply:
+
+![Screenshot](images/roles.png)
+![Screenshot](images/editor.png)
+![Screenshot](images/owner.png)
+![Screenshot](images/pu.png)
+![Screenshot](images/viewer.png)
 
 All Set! Go to permit.io to 'Policy' tab and verify that policies and roles are there there and fill them according to your wish.
 If so, lets begin! open terminal:
@@ -73,21 +80,40 @@ curl -X POST -H "Content-Type: application/json" -d '{"name": "permit3"}' http:/
 ```
 Now go to Permit.io and check under 'Directory' tab that you able to see all the new users, if you're not see them please verify that you're on 'All Tenants' and not under 'Default Tenant'.
 
-Here are few more curl commands in order to check the policy enforcement:
+Here are few curl commands in order to check the policy enforcement:
 
+## Request:
 ```sh
 curl -X POST -d '{"user_name":"permit1","name":"My_New_Blog"}' http://localhost:8080/blogs
+```
+## Response:
+'New blog created successfully' for success
+'Access denied' for unsuccess
+
+## Request:
+```sh
 curl -X DELETE -d '{"user_name":"permit1"}' http://localhost:8080/blogs/permit_blog1
+```
+## Response:
+'Blog with ID permit_blog1 deleted successfully' for success
+'Access denied' for unsuccess
+
+
+## Request:
+```sh
 curl -X GET -d '{"user_name":"permit2"}' http://localhost:8080/blogs
+```
+## Response:
+'["blog1","blog2","blog3"]' for success
+'Access denied' for unsuccess
+
+
+## Request:
+```sh
 curl -X POST -d '{"user_name":"permit3"}' http://localhost:8080/transfer_payment_for_blog
 ```
-
-## Request example:
-```sh
-curl -X POST -d '{"user_name":"permit1","name":"My_New_Blog"}' http://localhost:8080/blogs
-```
-## Response example (according to the configured policy):
-'New blog created successfully' for success
+## Response:
+'Payment transferred successfully for blog' for success
 'Access denied' for unsuccess
 
 
