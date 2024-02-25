@@ -70,7 +70,7 @@ Example screenshots of the expected state after terraform apply:
 ![Screenshot](images/pu.png)
 ![Screenshot](images/viewer.png)
 
-All Set! Go to permit.io to 'Policy' tab and verify that policies and roles are there there and fill them according to your wish.
+All Set! Go to permit.io to 'Policy' tab and verify that policies and roles are there and fill them according to your wish.
 If so, lets begin! open terminal:
 
 ```sh
