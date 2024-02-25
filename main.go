@@ -23,7 +23,7 @@ func main() {
 
 	// Set up routes
 	r := mux.NewRouter()
-
+	
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Welcome to the Go application!")
 		fmt.Fprintln(w, "This is a simple welcome page.")
@@ -65,7 +65,7 @@ func main() {
 		resource := enforcement.ResourceBuilder("blog").Build()
 
 		// Check if the user is permitted to perform the action
-		permitted, err := permitClient.Check(user, "read", resource)
+		permitted, err := permitClient.Check(user, "write", resource)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
