@@ -236,7 +236,7 @@ func deleteBlog(blogID string) error {
 
 
 func getSuperUserAtrribute(userID string) string {
-	// Implement logic to delete the blog from your data store
+	// Implement logic to get user attribute from your data store
 	// For simplicity, this is just a placeholder implementation
 	return "true"
 }
