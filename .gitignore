@@ -1,0 +1,16 @@
+# Go
+go.mod
+go.sum
+
+# Terraform
+terraform.tfstate
+terraform.tfstate.backup
+.terraform
+.terraform.lock.hcl
+
+# Project documentation
+CHANGELOG.md
+README.md
+
+# Specific Terraform provider binary
+terraform-provider-permit-io_v0.0.12
