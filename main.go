@@ -174,7 +174,7 @@ func main() {
 		// ABAC check - users with attributes "is_superuser": "true" can delete the blog
 		resource := enforcement.ResourceBuilder("blog").WithTenant("default").WithAttributes(attrMap).Build()
 	
-		// Check if the user is permitted to perform the action
+		// RBAC check - users with 'delete' permission can delete the blog
 		permitted, err := permitClient.Check(user, "delete", resource)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
