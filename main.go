@@ -16,7 +16,7 @@ import (
 func main() {
 	// Initialize the Permit client
 	permitConfig := config.NewConfigBuilder(
-		"permit_key_VG0tFLP8PEYcWb3I6oK2InXzmVwlD5VKObp6nDdEDICUBEg55p2Yvr625dleiTgcQdzRS6oofLcLZWUwNCvTYA"). //Please insert your API KEY
+		"<YOUR_API_KEY>"). //Please insert your API KEY
 		WithPdpUrl("http://localhost:7766"). // change if needed according to PDP external port
 		Build()
 	permitClient := permit.NewPermit(permitConfig)
