@@ -16,7 +16,7 @@ import (
 func main() {
 	// Initialize the Permit client
 	permitConfig := config.NewConfigBuilder(
-		"<API_KEY>"). //Please insert your API KEY
+		"permit_key_VG0tFLP8PEYcWb3I6oK2InXzmVwlD5VKObp6nDdEDICUBEg55p2Yvr625dleiTgcQdzRS6oofLcLZWUwNCvTYA"). //Please insert your API KEY
 		WithPdpUrl("http://localhost:7766"). // change if needed according to PDP external port
 		Build()
 	permitClient := permit.NewPermit(permitConfig)
@@ -157,9 +157,22 @@ func main() {
 	
 		// Check if user exists and create a user object
 		user := enforcement.UserBuilder(userData.UserName).Build()
-	
-		// Mocked resource for demonstration
-		resource := enforcement.ResourceBuilder("blog").Build()
+		
+		// ABAC attributes for the resource
+		attributes := map[string]string{
+			"is_superuser": "true",
+		}
+
+		// Convert attributes map[string]string to map[string]interface{}
+		attrMap := make(map[string]interface{})
+		for key, value := range attributes {
+			attrMap[key] = value
+		}
+
+		attrMap["is_superuser"] = "true"
+		
+		// ABAC check - users with attributes "is_superuser": "true" can delete the blog
+		resource := enforcement.ResourceBuilder("blog").WithTenant("default").WithAttributes(attrMap).Build()
 	
 		// Check if the user is permitted to perform the action
 		permitted, err := permitClient.Check(user, "delete", resource)
