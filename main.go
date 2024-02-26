@@ -16,14 +16,14 @@ import (
 func main() {
 	// Initialize the Permit client
 	permitConfig := config.NewConfigBuilder(
-		"<API_KEY>"). //Please insert your API KEY
+		"<YOUR_API_KEY>").//Please insert your API KEY
 		WithPdpUrl("http://localhost:7766"). // change if needed according to PDP external port
 		Build()
 	permitClient := permit.NewPermit(permitConfig)
 
 	// Set up routes
 	r := mux.NewRouter()
-	
+
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Welcome to the Go application!")
 		fmt.Fprintln(w, "This is a simple welcome page.")
@@ -154,14 +154,35 @@ func main() {
 			http.Error(w, "Failed to parse request body", http.StatusBadRequest)
 			return
 		}
-	
+
+		// ABAC attributes for the resource
+		attributes := map[string]string{
+			"is_superuser": "true",
+		}
+
+		// Convert attributes map[string]string to map[string]interface{}
+		attrMap := make(map[string]interface{})
+		for key, value := range attributes {
+			attrMap[key] = value
+		}
+
+		su_attribute := getSuperUserAtrribute(userData.UserName)
+		if su_attribute != "true"{
+			http.Error(w, "Failed to get user attribute", http.StatusInternalServerError)
+			return
+		}
+		
+		attrMap["is_superuser"] = su_attribute
+
+		
+
 		// Check if user exists and create a user object
-		user := enforcement.UserBuilder(userData.UserName).Build()
-	
-		// Mocked resource for demonstration
-		resource := enforcement.ResourceBuilder("blog").Build()
-	
-		// Check if the user is permitted to perform the action
+		user := enforcement.UserBuilder(userData.UserName).WithAttributes(attrMap).Build()
+
+		// ABAC check - users with attributes "is_superuser": "true" can delete the blog
+		resource := enforcement.ResourceBuilder("blog").WithTenant("default").Build()
+
+		// RBAC check - users with 'delete' permission can delete the blog
 		permitted, err := permitClient.Check(user, "delete", resource)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -171,27 +192,27 @@ func main() {
 			http.Error(w, "Access denied", http.StatusForbidden)
 			return
 		}
-	
+
 		// Get the blog ID from the request path parameters
 		vars := mux.Vars(r)
 		blogID := vars["blog_id"]
-	
+
 		// Check if the blog ID exists (you would need to implement this logic based on your application)
 		if !blogExists(blogID) {
 			http.Error(w, "Blog not found", http.StatusNotFound)
 			return
 		}
-	
+
 		// Delete the blog (you would need to implement this logic based on your application)
 		err = deleteBlog(blogID)
 		if err != nil {
 			http.Error(w, "Failed to delete blog", http.StatusInternalServerError)
 			return
 		}
-	
+
 		// Return a success message
 		fmt.Fprintf(w, "Blog with ID %s deleted successfully", blogID)
-	}).Methods("DELETE")	
+	}).Methods("DELETE")
 
 	// Start the server
 	port := ":8080"
@@ -211,4 +232,11 @@ func deleteBlog(blogID string) error {
 	// Implement logic to delete the blog from your data store
 	// For simplicity, this is just a placeholder implementation
 	return nil
+}
+
+
+func getSuperUserAtrribute(userID string) string {
+	// Implement logic to get user attribute from your data store
+	// For simplicity, this is just a placeholder implementation
+	return "true"
 }
